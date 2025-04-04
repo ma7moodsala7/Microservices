@@ -1,15 +1,22 @@
 using IdentityService.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using OpenIddict.EntityFrameworkCore.Models;
 
 namespace IdentityService.Persistence.Context;
 
-public class IdentityDbContext : DbContext
+public class IdentityDbContext : IdentityDbContext<User>
 {
     public IdentityDbContext(DbContextOptions<IdentityDbContext> options) : base(options)
     {
     }
 
-    public DbSet<User> Users { get; set; }
+    // Required for OpenIddict
+    public DbSet<OpenIddictEntityFrameworkCoreApplication> Applications { get; set; }
+    public DbSet<OpenIddictEntityFrameworkCoreAuthorization> Authorizations { get; set; }
+    public DbSet<OpenIddictEntityFrameworkCoreScope> Scopes { get; set; }
+    public DbSet<OpenIddictEntityFrameworkCoreToken> Tokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -17,15 +24,11 @@ public class IdentityDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.Username).IsRequired().HasMaxLength(50);
-            entity.Property(e => e.Email).IsRequired().HasMaxLength(100);
-            entity.Property(e => e.PasswordHash).IsRequired();
             entity.Property(e => e.FirstName).HasMaxLength(50);
             entity.Property(e => e.LastName).HasMaxLength(50);
-            
-            entity.HasIndex(e => e.Username).IsUnique();
-            entity.HasIndex(e => e.Email).IsUnique();
         });
+
+        // Let OpenIddict configure its entities
+        modelBuilder.UseOpenIddict();
     }
 }

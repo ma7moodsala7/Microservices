@@ -17,25 +17,25 @@ public class UserRepository : GenericRepository<User>, IUserRepository
 
     public async Task<User?> GetByUsernameAsync(string username)
     {
-        return await _context.Set<User>()
-            .FirstOrDefaultAsync(u => u.Username == username && !u.IsDeleted);
+        return await _context.Users
+            .FirstOrDefaultAsync(u => u.UserName == username);
     }
 
     public async Task<User?> GetByEmailAsync(string email)
     {
-        return await _context.Set<User>()
-            .FirstOrDefaultAsync(u => u.Email == email && !u.IsDeleted);
+        return await _context.Users
+            .FirstOrDefaultAsync(u => u.Email == email);
     }
 
     public async Task<bool> IsUsernameUniqueAsync(string username)
     {
-        return !await _context.Set<User>()
-            .AnyAsync(u => u.Username == username && !u.IsDeleted);
+        return !await _context.Users
+            .AnyAsync(u => u.UserName == username);
     }
 
     public async Task<bool> IsEmailUniqueAsync(string email)
     {
-        return !await _context.Set<User>()
-            .AnyAsync(u => u.Email == email && !u.IsDeleted);
+        return !await _context.Users
+            .AnyAsync(u => u.Email == email);
     }
 }
