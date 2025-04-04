@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenIddict.Abstractions;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace IdentityService.Persistence;
 
@@ -46,13 +47,29 @@ public static class DependencyInjection
                 options.SetTokenEndpointUris("/connect/token");
 
                 options.AllowPasswordFlow();
-                options.AcceptAnonymousClients(); // No client secret required
+                options.AcceptAnonymousClients();
 
-                options.AddEphemeralEncryptionKey()
-                       .AddEphemeralSigningKey(); // For development only
+                // Register scopes (permissions)
+                options.RegisterScopes(
+                    Scopes.Email,
+                    Scopes.Profile,
+                    Scopes.Roles,
+                    "api"
+                );
+
+                // For development only
+                options.AddDevelopmentEncryptionCertificate()
+                       .AddDevelopmentSigningCertificate();
 
                 options.UseAspNetCore()
-                       .EnableTokenEndpointPassthrough(); // Allows custom controller to handle token flow if needed
+                       .EnableTokenEndpointPassthrough();
+
+                // Don't require client authentication
+                options.AcceptAnonymousClients();
+
+                // Don't require end-user consent
+                options.DisableAuthorizationStorage();
+                options.DisableTokenStorage();
             })
             .AddValidation(options =>
             {

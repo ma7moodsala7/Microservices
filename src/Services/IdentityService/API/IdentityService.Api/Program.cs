@@ -1,4 +1,6 @@
+using IdentityService.Domain.Entities;
 using IdentityService.Persistence;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,8 +24,40 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseRouting();
+
+// Add authentication/authorization middleware
+app.UseAuthentication();
 app.UseAuthorization();
 
+// Map endpoints
 app.MapControllers();
+app.MapDefaultControllerRoute();
+
+// Seed test user
+using (var scope = app.Services.CreateScope())
+{
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+
+    var existingUser = await userManager.FindByEmailAsync("test@shwra.com");
+    if (existingUser == null)
+    {
+        var user = new User
+        {
+            UserName = "test@shwra.com",
+            Email = "test@shwra.com",
+            PhoneNumber = "+966501234567",
+            EmailConfirmed = true, // For testing purposes
+            FirstName = "Test",
+            LastName = "User"
+        };
+
+        var result = await userManager.CreateAsync(user, "Shwra123$");
+        if (!result.Succeeded)
+        {
+            throw new Exception($"Failed to create test user: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+        }
+    }
+}
 
 app.Run();
