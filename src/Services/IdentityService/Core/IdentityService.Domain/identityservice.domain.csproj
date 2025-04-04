@@ -7,7 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Common" />
+    <ProjectReference Include="..\..\..\..\Shared\Common\Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Common\" />
     <Folder Include="Entities" />
     <Folder Include="Events" />
     <Folder Include="Exceptions" />

@@ -1,4 +1,4 @@
-namespace IdentityService.Domain.Common;
+namespace Common;
 
 public abstract class BaseEntity
 {

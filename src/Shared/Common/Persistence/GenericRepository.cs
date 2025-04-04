@@ -1,14 +1,12 @@
-using IdentityService.Domain.Interfaces;
-using IdentityService.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace IdentityService.Persistence.Repositories;
+namespace Common.Persistence;
 
-public class GenericRepository<T> : IRepository<T> where T : class
+public abstract class GenericRepository<T> : IRepository<T> where T : class
 {
-    protected readonly IdentityDbContext _context;
+    protected readonly DbContext _context;
 
-    public GenericRepository(IdentityDbContext context)
+    protected GenericRepository(DbContext context)
     {
         _context = context;
     }

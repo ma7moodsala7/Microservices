@@ -1,4 +1,4 @@
-namespace IdentityService.Domain.Interfaces;
+namespace Common.Persistence;
 
 public interface IRepository<T> where T : class
 {
