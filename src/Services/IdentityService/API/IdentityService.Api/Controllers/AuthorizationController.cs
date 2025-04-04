@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
 using System.Security.Claims;
+using MediatR;
+using IdentityService.Application.Features.Auth.Commands;
 
 namespace IdentityService.Api.Controllers;
 
@@ -13,13 +15,23 @@ public class AuthorizationController : Controller
 {
     private readonly SignInManager<User> _signInManager;
     private readonly UserManager<User> _userManager;
+    private readonly IMediator _mediator;
 
     public AuthorizationController(
         SignInManager<User> signInManager,
-        UserManager<User> userManager)
+        UserManager<User> userManager,
+        IMediator mediator)
     {
         _signInManager = signInManager;
         _userManager = userManager;
+        _mediator = mediator;
+    }
+
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] RegisterUserCommand command)
+    {
+        var result = await _mediator.Send(command);
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
     [HttpPost("~/connect/token")]

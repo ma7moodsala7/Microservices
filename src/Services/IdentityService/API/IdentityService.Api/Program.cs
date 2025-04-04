@@ -1,6 +1,7 @@
 using IdentityService.Domain.Entities;
 using IdentityService.Persistence;
 using Microsoft.AspNetCore.Identity;
+using IdentityService.Application.Features.Auth.Commands;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,9 @@ builder.Services.AddSwaggerGen();
 
 // Add Infrastructure
 builder.Services.AddInfrastructure(builder.Configuration);
+
+// Add MediatR
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(RegisterUserCommand).Assembly));
 
 var app = builder.Build();
 
