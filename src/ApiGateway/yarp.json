@@ -1,0 +1,24 @@
+{
+  "ReverseProxy": {
+    "Routes": {
+      "identity": {
+        "ClusterId": "identityCluster",
+        "Match": {
+          "Path": "/identity/{**catch-all}"
+        },
+        "Transforms": [
+          { "PathRemovePrefix": "/identity" }
+        ]
+      }
+    },
+    "Clusters": {
+      "identityCluster": {
+        "Destinations": {
+          "identity": {
+            "Address": "http://localhost:5010"
+          }
+        }
+      }
+    }
+  }
+}
