@@ -1,9 +1,10 @@
 using Common.Models;
 using MediatR;
+using Shared.Auditing;
 
 namespace IdentityService.Application.Features.Auth.Commands;
 
-public record RegisterUserCommand : IRequest<Result>
+public record RegisterUserCommand : IRequest<Result>, IAuditableCommand
 {
     public string Email { get; init; } = null!;
     public string Password { get; init; } = null!;
