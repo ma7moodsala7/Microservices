@@ -4,6 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <RootNamespace>Shared.Common</RootNamespace>
+    <AssemblyName>Shared.Common</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
