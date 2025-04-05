@@ -23,26 +23,7 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(RegisterUserCommand).Assembly));
 
 // Add MassTransit with RabbitMQ
-builder.Services.AddMassTransit(x =>
-{
-    x.AddConsumer<UserPingedConsumer>();
-
-    x.SetKebabCaseEndpointNameFormatter();
-
-    x.UsingRabbitMq((context, cfg) =>
-    {
-        cfg.Host("localhost", "/", h =>
-        {
-            h.Username("guest");
-            h.Password("guest");
-        });
-
-        cfg.ConfigureEndpoints(context);
-    });
-});
-
-// Register message publisher
-builder.Services.AddScoped<IMessagePublisher, MassTransitPublisher>();
+builder.Services.AddSharedMassTransit(typeof(UserPingedConsumer));
 
 // Configure Serilog
 builder.Host.UseSharedSerilog();
