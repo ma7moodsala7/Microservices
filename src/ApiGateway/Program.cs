@@ -1,12 +1,16 @@
+using Yarp.ReverseProxy;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add YARP reverse proxy services
+// Load config from yarp.json
+builder.Configuration.AddJsonFile("yarp.json", optional: false, reloadOnChange: true);
+
+// Register YARP
 builder.Services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
 var app = builder.Build();
 
-// Configure YARP reverse proxy middleware
 app.MapReverseProxy();
 
 app.Run();

@@ -62,7 +62,8 @@ public static class DependencyInjection
                        .AddDevelopmentSigningCertificate();
 
                 options.UseAspNetCore()
-                       .EnableTokenEndpointPassthrough();
+                       .EnableTokenEndpointPassthrough()
+                       .DisableTransportSecurityRequirement(); // Allow HTTP in development
 
                 // Don't require client authentication
                 options.AcceptAnonymousClients();
