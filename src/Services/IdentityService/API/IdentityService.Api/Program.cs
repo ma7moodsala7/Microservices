@@ -2,6 +2,7 @@ using IdentityService.Domain.Entities;
 using IdentityService.Persistence;
 using Microsoft.AspNetCore.Identity;
 using IdentityService.Application.Features.Auth.Commands;
+using Shared.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,9 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 // Add MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(RegisterUserCommand).Assembly));
+
+// Configure Serilog
+builder.Host.UseSharedSerilog();
 
 var app = builder.Build();
 
