@@ -1,8 +1,12 @@
 using IdentityService.Domain.Entities;
 using IdentityService.Persistence;
+using MassTransit;
 using Microsoft.AspNetCore.Identity;
 using IdentityService.Application.Features.Auth.Commands;
 using Shared.Logging;
+using Shared.Messaging;
+using Shared.Messaging.Events;
+using IdentityService.API.Consumers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +21,28 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 // Add MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(RegisterUserCommand).Assembly));
+
+// Add MassTransit with RabbitMQ
+builder.Services.AddMassTransit(x =>
+{
+    x.AddConsumer<UserPingedConsumer>();
+
+    x.SetKebabCaseEndpointNameFormatter();
+
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host("localhost", "/", h =>
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+
+        cfg.ConfigureEndpoints(context);
+    });
+});
+
+// Register message publisher
+builder.Services.AddScoped<IMessagePublisher, MassTransitPublisher>();
 
 // Configure Serilog
 builder.Host.UseSharedSerilog();
@@ -70,5 +96,18 @@ using (var scope = app.Services.CreateScope())
         }
     }
 }
+
+app.MapPost("/identity/test/publish", async (IMessagePublisher publisher) =>
+{
+    var evt = new UserPingedIntegrationEvent
+    {
+        UserId = "test-user",
+        Message = "Hello from IdentityService!"
+    };
+
+    await publisher.PublishAsync(evt);
+
+    return Results.Ok("Published UserPingedIntegrationEvent.");
+});
 
 app.Run();
