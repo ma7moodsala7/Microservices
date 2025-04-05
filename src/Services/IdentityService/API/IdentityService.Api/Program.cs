@@ -1,5 +1,6 @@
 using IdentityService.Domain.Entities;
 using IdentityService.Persistence;
+using MassTransit;
 using Microsoft.AspNetCore.Identity;
 using IdentityService.Application.Features.Auth.Commands;
 using Shared.Logging;
@@ -17,6 +18,23 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 // Add MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(RegisterUserCommand).Assembly));
+
+// Add MassTransit with RabbitMQ
+builder.Services.AddMassTransit(x =>
+{
+    x.SetKebabCaseEndpointNameFormatter();
+
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host("rabbitmq", "/", h =>
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+
+        cfg.ConfigureEndpoints(context);
+    });
+});
 
 // Configure Serilog
 builder.Host.UseSharedSerilog();
