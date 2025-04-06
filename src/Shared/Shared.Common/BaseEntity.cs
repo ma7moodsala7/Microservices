@@ -1,4 +1,4 @@
-namespace Common;
+namespace Shared.Common;
 
 public abstract class BaseEntity
 {
