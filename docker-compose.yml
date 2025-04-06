@@ -52,3 +52,22 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
+
+  auditsinkservice.api:
+    build:
+      context: .
+      dockerfile: src/Services/_CrossCutting/AuditSink/AuditSinkService.Api/Dockerfile
+    container_name: auditsinkservice.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=host.docker.internal;Port=5432;Database=audit_sink_service;Username=postgres;Password=postgres
+      - RabbitMQ__Host=rabbitmq
+      - RabbitMQ__Username=guest
+      - RabbitMQ__Password=guest
+    ports:
+      - "6003:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
