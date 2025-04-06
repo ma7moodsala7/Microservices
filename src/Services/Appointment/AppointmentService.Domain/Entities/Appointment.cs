@@ -1,3 +1,5 @@
+using AppointmentService.Domain.Enums;
+
 namespace AppointmentService.Domain.Entities;
 
 public class Appointment
@@ -9,4 +11,5 @@ public class Appointment
     public string Notes { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
+    public AppointmentStatus Status { get; set; }
 }

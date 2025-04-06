@@ -1,5 +1,12 @@
 using AppointmentService.Application.Commands.CreateAppointment;
+using AppointmentService.Application.Interfaces;
+using AppointmentService.Persistence;
+using AppointmentService.Persistence.Repositories;
 using MediatR;
+using MassTransit;
+using Microsoft.EntityFrameworkCore;
+using Shared.Messaging;
+using Shared.Messaging.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +14,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateAppointmentCommand).Assembly));
+
+// Add DbContext
+builder.Services.AddDbContext<AppointmentDbContext>(options =>
+    options.UseInMemoryDatabase("AppointmentDb"));
+
+// Add repository
+builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+
+// Add shared MassTransit configuration
+builder.Services.AddSharedMassTransit();
 
 var app = builder.Build();
 
