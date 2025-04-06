@@ -1,5 +1,6 @@
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Shared.Messaging;
 
@@ -11,6 +12,7 @@ public static class MessagingExtensions
     {
         services.AddMassTransit(x =>
         {
+            // Add consumers with explicit queue configuration
             foreach (var consumer in consumerTypes)
             {
                 x.AddConsumer(consumer);
