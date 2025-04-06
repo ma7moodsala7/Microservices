@@ -1,22 +1,6 @@
 version: '3.9'
 
 services:
-  postgres:
-    image: postgres:16
-    container_name: postgres
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: identitydb
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -40,15 +24,31 @@ services:
     container_name: identityservice.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=identitydb;Username=postgres;Password=postgres
+      - ConnectionStrings__DefaultConnection=Host=host.docker.internal;Port=5432;Database=identity_service;Username=postgres;Password=postgres
       - RabbitMQ__Host=rabbitmq
     ports:
       - "7000:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
-      postgres:
-        condition: service_healthy
       rabbitmq:
         condition: service_healthy
 
-volumes:
-  postgres_data:
+  appointmentservice.api:
+    build:
+      context: .
+      dockerfile: src/Services/Appointment/AppointmentService.Api/Dockerfile
+    container_name: appointmentservice.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=host.docker.internal;Port=5432;Database=appointment_service;Username=postgres;Password=postgres
+      - RabbitMQ__Host=rabbitmq
+      - RabbitMQ__Username=guest
+      - RabbitMQ__Password=guest
+    ports:
+      - "6002:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
