@@ -71,3 +71,19 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
+
+  notificationservice.api:
+    build:
+      context: .
+      dockerfile: src/Services/Notification/NotificationService.Api/Dockerfile
+    container_name: notificationservice.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - RabbitMQ__Host=rabbitmq
+      - RabbitMQ__Username=guest
+      - RabbitMQ__Password=guest
+    ports:
+      - "6004:8080"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
