@@ -8,13 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="12.2.0" />
+    <PackageReference Include="MediatR" Version="12.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Application\AppointmentService.Application.csproj" />
+    <ProjectReference Include="..\AppointmentService.Application\AppointmentService.Application.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Shared.Logging\Shared.Logging.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Shared.Messaging\Shared.Messaging.csproj" />
   </ItemGroup>
 
 </Project>
