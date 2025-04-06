@@ -1,6 +1,19 @@
 version: '3.9'
 
 services:
+  yarpapigateway:
+    build:
+      context: .
+      dockerfile: src/ApiGateways/YarpApiGateway/Dockerfile
+    container_name: yarpapigateway
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "6000:8080"
+    depends_on:
+      identityservice.api:
+        condition: service_started
+
 
   rabbitmq:
     image: rabbitmq:3-management

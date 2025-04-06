@@ -15,7 +15,7 @@
       "identityCluster": {
         "Destinations": {
           "identity": {
-            "Address": "http://localhost:5010"
+            "Address": "http://identityservice.api:8080"
           }
         }
       }
