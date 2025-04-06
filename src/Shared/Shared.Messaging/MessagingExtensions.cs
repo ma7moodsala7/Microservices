@@ -1,4 +1,5 @@
 using MassTransit;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -22,10 +23,15 @@ public static class MessagingExtensions
 
             x.UsingRabbitMq((context, cfg) =>
             {
-                cfg.Host("localhost", "/", h =>
+                var configuration = context.GetRequiredService<IConfiguration>();
+                var host = configuration["RabbitMQ:Host"] ?? "localhost";
+                var username = configuration["RabbitMQ:Username"] ?? "guest";
+                var password = configuration["RabbitMQ:Password"] ?? "guest";
+
+                cfg.Host(host, "/", h =>
                 {
-                    h.Username("guest");
-                    h.Password("guest");
+                    h.Username(username);
+                    h.Password(password);
                 });
 
                 cfg.ConfigureEndpoints(context);
