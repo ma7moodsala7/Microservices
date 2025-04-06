@@ -1,6 +1,8 @@
 using IdentityService.Domain.Entities;
 using IdentityService.Persistence;
+using IdentityService.Persistence.Context;
 using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using IdentityService.Application.Features.Auth.Commands;
 using Shared.Logging;
@@ -52,9 +54,13 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapDefaultControllerRoute();
 
-// Seed test user
+// Apply migrations and seed test user
 using (var scope = app.Services.CreateScope())
 {
+    // Apply migrations
+    var dbContext = scope.ServiceProvider.GetRequiredService<IdentityDbContext>();
+    await dbContext.Database.MigrateAsync();
+
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
 
     var existingUser = await userManager.FindByEmailAsync("test@shwra.com");
