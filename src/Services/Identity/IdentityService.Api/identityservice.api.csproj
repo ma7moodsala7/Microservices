@@ -26,4 +26,7 @@
     <ProjectReference Include="..\..\..\Shared\Shared.Messaging\Shared.Messaging.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="../../../Shared/Shared.Settings/Shared.Settings.csproj" />
+  </ItemGroup>
 </Project>

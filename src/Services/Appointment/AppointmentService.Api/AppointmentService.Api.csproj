@@ -31,4 +31,7 @@
     <ProjectReference Include="..\AppointmentService.Persistence\AppointmentService.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="../../../Shared/Shared.Settings/Shared.Settings.csproj" />
+  </ItemGroup>
 </Project>

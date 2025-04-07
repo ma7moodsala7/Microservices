@@ -20,4 +20,7 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="../../Shared/Shared.Settings/Shared.Settings.csproj" />
+  </ItemGroup>
 </Project>

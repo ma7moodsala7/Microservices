@@ -11,6 +11,9 @@ using Shared.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Load shared configuration
+builder.Configuration.AddSharedSettings();
+
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

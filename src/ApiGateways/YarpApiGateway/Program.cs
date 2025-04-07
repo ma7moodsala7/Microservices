@@ -4,6 +4,9 @@ using Shared.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Load shared configuration
+builder.Configuration.AddSharedSettings();
+
 // Load config from yarp.json
 builder.Configuration.AddJsonFile("yarp.json", optional: false, reloadOnChange: true);
 
