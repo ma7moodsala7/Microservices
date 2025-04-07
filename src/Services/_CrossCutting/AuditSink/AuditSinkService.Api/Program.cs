@@ -5,8 +5,15 @@ using AuditSinkService.Persistence;
 using MassTransit;
 using AuditSinkService.Application.Consumers;
 using Shared.Logging;
+using Shared.Settings;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Load shared configuration
+builder.Configuration.AddSharedSettings();
 
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
@@ -22,6 +29,11 @@ builder.Services.AddMediatR(cfg =>
 
 // Add OpenTelemetry
 builder.Services.AddOpenTelemetrySupport(builder.Configuration, "AuditSinkService");
+
+// Add health checks
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<AuditDbContext>("db", tags: new[] { "ready" })
+    .AddRabbitMQ($"amqp://guest:guest@{builder.Configuration["RabbitMQ:Host"]}:5672", name: "rabbitmq", tags: new[] { "ready" });
 
 // Add MassTransit
 builder.Services.AddMassTransit(x =>
@@ -65,6 +77,19 @@ app.MapPost("/api/audit", async (CreateAuditLogCommand command, IMediator mediat
 })
 .WithName("CreateAuditLog")
 .WithOpenApi();
+
+// Add health endpoints
+app.MapHealthChecks("/health/ready", new HealthCheckOptions
+{
+    Predicate = check => check.Tags.Contains("ready"),
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+
+app.MapHealthChecks("/health/live", new HealthCheckOptions
+{
+    Predicate = _ => false, // just confirms the app is running
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 
 // Initialize database and apply migrations
 using (var scope = app.Services.CreateScope())

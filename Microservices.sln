@@ -1,3 +1,4 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
@@ -87,6 +88,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{205EB3CD-3AB7-4120-8B44-50836726B6ED}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{C32259D2-CA3E-4750-A9CD-16075BE10049}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Settings", "src\Shared\Shared.Settings\Shared.Settings.csproj", "{05AE45F1-A61A-4FAD-B3EB-E9454F733FA5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -350,12 +353,21 @@ Global
 		{6DDCD91C-0E1E-49FD-8DB5-FD5099E3FED1}.Release|x64.Build.0 = Release|Any CPU
 		{6DDCD91C-0E1E-49FD-8DB5-FD5099E3FED1}.Release|x86.ActiveCfg = Release|Any CPU
 		{6DDCD91C-0E1E-49FD-8DB5-FD5099E3FED1}.Release|x86.Build.0 = Release|Any CPU
+		{05AE45F1-A61A-4FAD-B3EB-E9454F733FA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05AE45F1-A61A-4FAD-B3EB-E9454F733FA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05AE45F1-A61A-4FAD-B3EB-E9454F733FA5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{05AE45F1-A61A-4FAD-B3EB-E9454F733FA5}.Debug|x64.Build.0 = Debug|Any CPU
+		{05AE45F1-A61A-4FAD-B3EB-E9454F733FA5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{05AE45F1-A61A-4FAD-B3EB-E9454F733FA5}.Debug|x86.Build.0 = Debug|Any CPU
+		{05AE45F1-A61A-4FAD-B3EB-E9454F733FA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05AE45F1-A61A-4FAD-B3EB-E9454F733FA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05AE45F1-A61A-4FAD-B3EB-E9454F733FA5}.Release|x64.ActiveCfg = Release|Any CPU
+		{05AE45F1-A61A-4FAD-B3EB-E9454F733FA5}.Release|x64.Build.0 = Release|Any CPU
+		{05AE45F1-A61A-4FAD-B3EB-E9454F733FA5}.Release|x86.ActiveCfg = Release|Any CPU
+		{05AE45F1-A61A-4FAD-B3EB-E9454F733FA5}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(SolutionItems) = preSolution
-		docker-compose.yml = docker-compose.yml
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B0DCE3BD-FFFA-4C3E-A9B5-B0F6C6D89FE1} = {A5381B1E-7D4F-4A82-8A39-18D802E38BE9}
@@ -399,8 +411,12 @@ Global
 		{0B02E4A3-D5A8-4649-BC22-A0CEC0567258} = {54070250-5515-9BC9-9F8B-7A7FD885CBB7}
 		{205EB3CD-3AB7-4120-8B44-50836726B6ED} = {54070250-5515-9BC9-9F8B-7A7FD885CBB7}
 		{C32259D2-CA3E-4750-A9CD-16075BE10049} = {54070250-5515-9BC9-9F8B-7A7FD885CBB7}
+		{05AE45F1-A61A-4FAD-B3EB-E9454F733FA5} = {285E936A-EF9C-D8EC-0E39-04B5D2ADD723}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E4DC1A4A-4AF5-42BE-9F91-A3C251A198E7}
+	EndGlobalSection
+	GlobalSection(SolutionItems) = preSolution
+		docker-compose.yml = docker-compose.yml
 	EndGlobalSection
 EndGlobal
