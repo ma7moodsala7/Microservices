@@ -1,9 +1,14 @@
 using AppointmentService.Application.Commands.CreateAppointment;
 using AppointmentService.Application.Interfaces;
 using AppointmentService.Persistence;
+using Shared.Settings;
+
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using HealthChecks.UI.Client;
 using AppointmentService.Persistence.Repositories;
 using MediatR;
 using MassTransit;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Shared.Messaging;
 using Shared.Messaging.Events;
@@ -33,6 +38,10 @@ builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 // Add shared MassTransit configuration
 builder.Services.AddSharedMassTransit();
 
+// Add health checks
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<AppointmentDbContext>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
@@ -49,6 +58,12 @@ app.MapPost("/appointments", async (CreateAppointmentCommand command, IMediator 
 {
     var appointmentId = await mediator.Send(command);
     return Results.Created($"/appointments/{appointmentId}", appointmentId);
+});
+
+// Add health endpoint
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
 
 app.Run();

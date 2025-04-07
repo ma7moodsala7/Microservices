@@ -1,6 +1,10 @@
 using IdentityService.Domain.Entities;
 using IdentityService.Persistence;
 using IdentityService.Persistence.Context;
+using Shared.Settings;
+
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using HealthChecks.UI.Client;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
@@ -9,6 +13,7 @@ using Shared.Logging;
 using Shared.Messaging;
 using Shared.Messaging.Events;
 using IdentityService.API.Consumers;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +41,11 @@ builder.Host.UseSharedSerilog();
 // Add OpenTelemetry
 builder.Services.AddOpenTelemetrySupport(builder.Configuration, "IdentityService");
 
+// Add health checks
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<IdentityDbContext>()
+    .AddRabbitMQ();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -58,7 +68,29 @@ app.UseAuthorization();
 
 // Map endpoints
 app.MapControllers();
+
+// Add health endpoint
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+
 app.MapDefaultControllerRoute();
+
+app.MapPost("/identity/test/publish", async (IMessagePublisher publisher) =>
+{
+    var evt = new UserPingedIntegrationEvent
+    {
+        UserId = "test-user",
+        Message = "Hello from IdentityService!"
+    };
+
+    await publisher.PublishAsync(evt);
+
+    return Results.Ok("Published UserPingedIntegrationEvent.");
+});
+
+
 
 // Apply migrations and seed test user
 using (var scope = app.Services.CreateScope())
@@ -90,17 +122,6 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-app.MapPost("/identity/test/publish", async (IMessagePublisher publisher) =>
-{
-    var evt = new UserPingedIntegrationEvent
-    {
-        UserId = "test-user",
-        Message = "Hello from IdentityService!"
-    };
 
-    await publisher.PublishAsync(evt);
-
-    return Results.Ok("Published UserPingedIntegrationEvent.");
-});
 
 app.Run();

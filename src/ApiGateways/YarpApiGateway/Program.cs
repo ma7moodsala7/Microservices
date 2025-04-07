@@ -1,6 +1,11 @@
 using Yarp.ReverseProxy;
 using System.Diagnostics;
 using Shared.Logging;
+using Shared.Settings;
+
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +18,9 @@ builder.Configuration.AddJsonFile("yarp.json", optional: false, reloadOnChange: 
 // Register YARP
 builder.Services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+
+// Add health checks
+builder.Services.AddHealthChecks();
 
 // Add OpenTelemetry
 builder.Services.AddOpenTelemetrySupport(builder.Configuration, "api-gateway");
@@ -34,6 +42,9 @@ app.Use(async (context, next) =>
 app.MapReverseProxy();
 
 // Add health endpoint
-app.MapGet("/health", () => Results.Ok("API Gateway is healthy"));
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 
 app.Run();
