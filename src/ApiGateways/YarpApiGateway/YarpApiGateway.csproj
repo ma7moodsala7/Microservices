@@ -11,6 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Shared.Logging\Shared.Logging.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="yarp.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

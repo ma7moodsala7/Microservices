@@ -1,5 +1,6 @@
 using Yarp.ReverseProxy;
 using System.Diagnostics;
+using Shared.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,9 @@ builder.Configuration.AddJsonFile("yarp.json", optional: false, reloadOnChange: 
 // Register YARP
 builder.Services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+
+// Add OpenTelemetry
+builder.Services.AddOpenTelemetrySupport(builder.Configuration, "api-gateway");
 
 var app = builder.Build();
 

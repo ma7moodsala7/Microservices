@@ -26,7 +26,7 @@ public static class OpenTelemetryExtensions
                     )
                     .AddOtlpExporter(options =>
                     {
-                        options.Endpoint = new Uri(configuration["OpenTelemetry:OtlpEndpoint"] ?? "http://otel-collector:4317");
+                        options.Endpoint = new Uri(configuration["OpenTelemetry:Endpoint"] ?? "http://otel-collector:4317");
                     });
             });
 
