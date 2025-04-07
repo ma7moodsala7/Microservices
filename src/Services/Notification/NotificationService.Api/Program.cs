@@ -33,7 +33,7 @@ builder.Services.AddOpenTelemetrySupport(builder.Configuration, "NotificationSer
 
 // Add health checks
 builder.Services.AddHealthChecks()
-    .AddRabbitMQ();
+    .AddRabbitMQ($"amqp://guest:guest@{builder.Configuration["RabbitMQ:Host"]}:5672", name: "rabbitmq", tags: new[] { "ready" });
 
 var app = builder.Build();
 
@@ -46,9 +46,16 @@ if (app.Environment.IsDevelopment())
 
 app.MapGet("/", () => "NotificationService is running!");
 
-// Add health endpoint
-app.MapHealthChecks("/health", new HealthCheckOptions
+// Add health endpoints
+app.MapHealthChecks("/health/ready", new HealthCheckOptions
 {
+    Predicate = check => check.Tags.Contains("ready"),
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+
+app.MapHealthChecks("/health/live", new HealthCheckOptions
+{
+    Predicate = _ => false, // just confirms the app is running
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
 

@@ -41,10 +41,13 @@ app.Use(async (context, next) =>
 
 app.MapReverseProxy();
 
-// Add health endpoint
-app.MapHealthChecks("/health", new HealthCheckOptions
+// Add health endpoints
+app.MapHealthChecks("/health/live", new HealthCheckOptions
 {
+    Predicate = _ => false, // just confirms the app is running
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
+
+// Gateway has no dependencies to check for readiness
 
 app.Run();

@@ -40,7 +40,7 @@ builder.Services.AddSharedMassTransit();
 
 // Add health checks
 builder.Services.AddHealthChecks()
-    .AddDbContextCheck<AppointmentDbContext>();
+    .AddDbContextCheck<AppointmentDbContext>("db", tags: new[] { "ready" });
 
 var app = builder.Build();
 
@@ -60,9 +60,16 @@ app.MapPost("/appointments", async (CreateAppointmentCommand command, IMediator 
     return Results.Created($"/appointments/{appointmentId}", appointmentId);
 });
 
-// Add health endpoint
-app.MapHealthChecks("/health", new HealthCheckOptions
+// Add health endpoints
+app.MapHealthChecks("/health/ready", new HealthCheckOptions
 {
+    Predicate = check => check.Tags.Contains("ready"),
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+
+app.MapHealthChecks("/health/live", new HealthCheckOptions
+{
+    Predicate = _ => false, // just confirms the app is running
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
 
