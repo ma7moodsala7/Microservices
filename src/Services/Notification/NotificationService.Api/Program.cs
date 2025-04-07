@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using NotificationService.Api.Consumers;
 using Shared.Messaging;
+using Shared.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,9 @@ var logger = LoggerFactory.Create(config =>
 logger.LogInformation("Configuring MassTransit with consumer: {ConsumerType}", typeof(AppointmentCreatedConsumer).Name);
 builder.Services.AddSharedMassTransit(typeof(AppointmentCreatedConsumer));
 logger.LogInformation("MassTransit configured successfully");
+
+// Add OpenTelemetry
+builder.Services.AddOpenTelemetrySupport(builder.Configuration, "NotificationService");
 
 var app = builder.Build();
 

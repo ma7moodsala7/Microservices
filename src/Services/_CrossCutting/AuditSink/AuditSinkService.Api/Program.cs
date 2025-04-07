@@ -4,6 +4,7 @@ using MediatR;
 using AuditSinkService.Persistence;
 using MassTransit;
 using AuditSinkService.Application.Consumers;
+using Shared.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,9 @@ builder.Services.AddDbContext<AuditDbContext>(options =>
 // Add MediatR
 builder.Services.AddMediatR(cfg => 
     cfg.RegisterServicesFromAssembly(typeof(CreateAuditLogCommand).Assembly));
+
+// Add OpenTelemetry
+builder.Services.AddOpenTelemetrySupport(builder.Configuration, "AuditSinkService");
 
 // Add MassTransit
 builder.Services.AddMassTransit(x =>
