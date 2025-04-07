@@ -7,6 +7,7 @@ WORKDIR /src
 
 # Copy project files
 COPY ["src/ApiGateways/YarpApiGateway/YarpApiGateway.csproj", "ApiGateways/YarpApiGateway/"]
+COPY ["src/Shared/Shared.Logging/Shared.Logging.csproj", "Shared/Shared.Logging/"]
 COPY ["nuget.config", "."]
 
 # Restore packages
@@ -14,6 +15,7 @@ RUN dotnet restore "ApiGateways/YarpApiGateway/YarpApiGateway.csproj"
 
 # Copy everything else
 COPY ["src/ApiGateways/YarpApiGateway/", "ApiGateways/YarpApiGateway/"]
+COPY ["src/Shared/Shared.Logging/", "Shared/Shared.Logging/"]
 
 # Build
 WORKDIR "/src/ApiGateways/YarpApiGateway"

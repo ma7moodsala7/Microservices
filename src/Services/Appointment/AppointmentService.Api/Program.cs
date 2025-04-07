@@ -7,8 +7,7 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Shared.Messaging;
 using Shared.Messaging.Events;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
+using Shared.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,22 +16,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Add OpenTelemetry
-builder.Services.AddOpenTelemetry()
-    .WithTracing(tracerProvider =>
-    {
-        tracerProvider
-            .AddAspNetCoreInstrumentation()
-            .AddHttpClientInstrumentation()
-            .AddEntityFrameworkCoreInstrumentation()
-            .SetResourceBuilder(
-                ResourceBuilder.CreateDefault()
-                    .AddService("AppointmentService", serviceVersion: "1.0.0")
-                    .AddAttributes(new Dictionary<string, object>
-                    {
-                        { "deployment.environment", builder.Environment.EnvironmentName }
-                    }))
-            .AddConsoleExporter();
-    });
+builder.Services.AddOpenTelemetrySupport(builder.Configuration, "AppointmentService");
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateAppointmentCommand).Assembly));
 

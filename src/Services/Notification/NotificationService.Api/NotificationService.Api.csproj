@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Shared\Shared.Messaging\Shared.Messaging.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Shared.Logging\Shared.Logging.csproj" />
   </ItemGroup>
 
 </Project>

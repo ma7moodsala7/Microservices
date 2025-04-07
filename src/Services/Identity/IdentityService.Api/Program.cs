@@ -30,6 +30,9 @@ builder.Services.AddSharedMassTransit(typeof(UserPingedConsumer));
 // Configure Serilog
 builder.Host.UseSharedSerilog();
 
+// Add OpenTelemetry
+builder.Services.AddOpenTelemetrySupport(builder.Configuration, "IdentityService");
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
