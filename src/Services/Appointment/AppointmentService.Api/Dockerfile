@@ -10,6 +10,7 @@ COPY ["src/Shared/Shared.Common/Shared.Common.csproj", "Shared/Shared.Common/"]
 COPY ["src/Shared/Shared.Messaging/Shared.Messaging.csproj", "Shared/Shared.Messaging/"]
 COPY ["src/Shared/Shared.Logging/Shared.Logging.csproj", "Shared/Shared.Logging/"]
 COPY ["src/Shared/Shared.Auditing/Shared.Auditing.csproj", "Shared/Shared.Auditing/"]
+COPY ["src/Shared/Shared.Settings/Shared.Settings.csproj", "Shared/Shared.Settings/"]
 COPY ["nuget.config", "."]
 
 RUN dotnet restore "Services/Appointment/AppointmentService.Api/AppointmentService.Api.csproj"

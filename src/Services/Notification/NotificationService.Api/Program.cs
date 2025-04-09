@@ -1,5 +1,9 @@
 using Microsoft.Extensions.Logging;
 using NotificationService.Api.Consumers;
+using NotificationService.Application.Abstractions;
+using NotificationService.Application.Dispatching;
+using NotificationService.Application.Models;
+using NotificationService.Application.Senders;
 using Shared.Messaging;
 using Shared.Settings;
 
@@ -15,7 +19,32 @@ builder.Configuration.AddSharedSettings();
 
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new() { Title = "Notification API", Version = "v1" });
+});
+
+// Add notification infrastructure
+// Register HttpClient for webhook sender
+builder.Services.AddHttpClient<WebhookNotificationSender>();
+
+// Register concrete sender implementations
+builder.Services.AddSingleton<ConsoleNotificationSender>();
+builder.Services.AddSingleton<SmsNotificationSender>();
+builder.Services.AddSingleton<EmailNotificationSender>();
+builder.Services.AddSingleton<WebhookNotificationSender>();
+
+// Register sender interfaces
+builder.Services.AddSingleton<INotificationSender>(sp => sp.GetRequiredService<ConsoleNotificationSender>());
+builder.Services.AddSingleton<INotificationSender>(sp => sp.GetRequiredService<SmsNotificationSender>());
+builder.Services.AddSingleton<INotificationSender>(sp => sp.GetRequiredService<EmailNotificationSender>());
+builder.Services.AddSingleton<INotificationSender>(sp => sp.GetRequiredService<WebhookNotificationSender>());
+builder.Services.AddSingleton<ISmsNotificationSender>(sp => sp.GetRequiredService<SmsNotificationSender>());
+builder.Services.AddSingleton<IEmailNotificationSender>(sp => sp.GetRequiredService<EmailNotificationSender>());
+builder.Services.AddSingleton<IWebhookNotificationSender>(sp => sp.GetRequiredService<WebhookNotificationSender>());
+
+// Register dispatcher
+builder.Services.AddSingleton<NotificationDispatcher>();
 
 // Add MassTransit with consumer
 var logger = LoggerFactory.Create(config => 
@@ -41,10 +70,33 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Notification API V1");
+        c.RoutePrefix = string.Empty; // Serve Swagger UI at the root
+    });
 }
 
 app.MapGet("/", () => "NotificationService is running!");
+
+// Add test notification endpoint
+app.MapPost("/send-test-notification", async (
+    NotificationMessage message,
+    NotificationDispatcher dispatcher,
+    ILogger<Program> logger,
+    CancellationToken cancellationToken) =>
+{
+    try
+    {
+        await dispatcher.DispatchAsync(message, cancellationToken);
+        return Results.Ok("Notification sent successfully");
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Failed to send test notification");
+        return Results.Problem("Failed to send notification");
+    }
+});
 
 // Add health endpoints
 app.MapHealthChecks("/health/ready", new HealthCheckOptions

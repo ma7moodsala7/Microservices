@@ -12,6 +12,8 @@ COPY ["src/Services/Notification/NotificationService.Domain/NotificationService.
 COPY ["src/Services/Notification/NotificationService.Persistence/NotificationService.Persistence.csproj", "Services/Notification/NotificationService.Persistence/"]
 COPY ["src/Shared/Shared.Common/Shared.Common.csproj", "Shared/Shared.Common/"]
 COPY ["src/Shared/Shared.Messaging/Shared.Messaging.csproj", "Shared/Shared.Messaging/"]
+COPY ["src/Shared/Shared.Settings/Shared.Settings.csproj", "Shared/Shared.Settings/"]
+COPY ["src/Shared/Shared.Logging/Shared.Logging.csproj", "Shared/Shared.Logging/"]
 
 # Restore packages
 RUN dotnet restore "Services/Notification/NotificationService.Api/NotificationService.Api.csproj"
