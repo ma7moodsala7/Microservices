@@ -22,5 +22,6 @@
 
   <ItemGroup>
     <ProjectReference Include="../../../Shared/Shared.Settings/Shared.Settings.csproj" />
+    <ProjectReference Include="../NotificationService.Application/NotificationService.Application.csproj" />
   </ItemGroup>
 </Project>
