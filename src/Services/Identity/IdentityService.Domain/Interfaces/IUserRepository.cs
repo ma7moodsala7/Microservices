@@ -1,4 +1,4 @@
-using Common.Persistence;
+using Shared.Persistence;
 using IdentityService.Domain.Entities;
 
 namespace IdentityService.Domain.Interfaces;
