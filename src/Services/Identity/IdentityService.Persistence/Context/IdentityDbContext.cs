@@ -6,7 +6,7 @@ using OpenIddict.EntityFrameworkCore.Models;
 
 namespace IdentityService.Persistence.Context;
 
-public class IdentityDbContext : IdentityDbContext<User>
+public class IdentityDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
 {
     public IdentityDbContext(DbContextOptions<IdentityDbContext> options) : base(options)
     {

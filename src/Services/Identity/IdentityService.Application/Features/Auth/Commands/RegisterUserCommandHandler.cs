@@ -1,4 +1,4 @@
-using Common.Models;
+using Shared.Contracts;
 using IdentityService.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;

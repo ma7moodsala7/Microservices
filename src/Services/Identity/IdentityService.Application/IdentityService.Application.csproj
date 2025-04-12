@@ -14,8 +14,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\IdentityService.Domain\identityservice.domain.csproj" />
-    <ProjectReference Include="..\..\..\Shared\Shared.Common\Shared.Common.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Shared.Utilities\Shared.Utilities.csproj" />
     <ProjectReference Include="..\..\..\Shared\Shared.Auditing\Shared.Auditing.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Shared.Contracts\Shared.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

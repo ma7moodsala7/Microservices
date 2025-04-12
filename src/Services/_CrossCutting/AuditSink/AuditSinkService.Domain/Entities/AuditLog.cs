@@ -1,4 +1,4 @@
-using Shared.Common;
+using Shared.Domain;
 
 namespace AuditSinkService.Domain.Entities;
 

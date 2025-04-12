@@ -1,4 +1,4 @@
-using Common.Models;
+using Shared.Contracts;
 using MediatR;
 using Shared.Auditing;
 

@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AppointmentService.Domain\AppointmentService.Domain.csproj" />
-    <ProjectReference Include="..\..\..\Shared\Shared.Common\Shared.Common.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Shared.Utilities\Shared.Utilities.csproj" />
     <ProjectReference Include="..\AppointmentService.Application\AppointmentService.Application.csproj" />
   </ItemGroup>
 
